@@ -11,6 +11,16 @@ class Thread extends Model
         'startTime', 'endTime', 'voteGap', 'code'];
     //protected $guarded = ['user_id'];   //inverse of fillable
 
+    /**
+     * The attributes that should be mutated to dates.
+     * https://laracasts.com/discuss/channels/code-review/using-diffforhumans-on-other-timestamps-than-created-at
+     * @var array
+     */
+    protected $dates = [
+        'startTime',
+        'endTime'
+    ];
+
     public function comments()
     {
         return $this->hasMany(Comment::class);  //hasMany('App\Comment');
@@ -24,6 +34,11 @@ class Thread extends Model
     public function user()  //thread->user->name     $comment->thread->user->name
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function selections()
+    {
+        return $this->hasMany(Selection::class);
     }
 
     public function addComment($body)

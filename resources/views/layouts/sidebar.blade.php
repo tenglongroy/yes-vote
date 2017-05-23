@@ -83,9 +83,12 @@
     </div>
     @else
         <div class="sidebar-module" style="height: 300px; background-color: forestgreen;">
-            <button type="submit" formaction="/threads/create" class="btn btn-primary" style="background-color: yellow">Create</button>
+            <button type="submit" formaction="/threads/create" class="btn btn-primary" style="background-color: greenyellow; font-size: larger; color: black">
+                Create</button>
         </div>
         @endif
+
+
 
 
     <div class="sidebar-module sidebar-module-inset">
@@ -123,9 +126,9 @@
         <h4>Elsewhere</h4>
         <ol class="list-unstyled">
             <li><a href="http://tenglongroy.pythonanywhere.com">Activity Register</a> </li>
-            <li><a href="#">GitHub</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">Facebook</a></li>
+            <li><a href="https://github.com/tenglongroy">My GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/tenglongroy/">My LinkedIn</a></li>
+            <li><a href="https://www.facebook.com/tenglongroy">My Facebook</a></li>
         </ol>
     </div>
 </div><!-- /.blog-sidebar -->

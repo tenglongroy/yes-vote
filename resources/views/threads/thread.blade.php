@@ -6,7 +6,7 @@
             {{ $thread->user->name }} on
             {{ $thread->created_at->toFormattedDateString() }}
         </h6>
-        <a href="/threads/{{ $thread->id }}" class="btn btn-primary">Go to Vote</a>
+        <a href="/threads/{{ $thread->entryCode }}" class="btn btn-primary">Go to Vote</a>
     </div>
 </div>
 

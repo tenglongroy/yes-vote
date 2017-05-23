@@ -20,10 +20,11 @@ class CreateThreadsTable extends Migration
             $table->text('description');
             $table->boolean('isComment')->default(true);
             $table->boolean('isAnonymous')->default(false);
+            $table->boolean('isPublic')->default(true);
             $table->timestamp('startTime')->nullable();
             $table->timestamp('endTime')->nullable();
             $table->integer('voteGap')->default(43200); //1 month
-            $table->string('code')->default('@@@@');
+            $table->string('entryCode')->unique();
             $table->timestamps();
         });
     }

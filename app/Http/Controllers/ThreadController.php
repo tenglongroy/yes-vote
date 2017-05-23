@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Thread;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ThreadController extends Controller
 {
@@ -35,11 +36,53 @@ class ThreadController extends Controller
         return view('threads.index', compact('threads', 'archives'));
     }
 
-    public function show(Thread $thread)
+    public function show($entryCode)
     {
-        $comments = $thread->comments();
-        $votes = $thread->votes();
-        return view('threads.show', compact('thread', 'comments'));
+        $thread = Thread::where('entryCode', $entryCode)->first();
+        $comments = $thread->comments;
+        $votes = $thread->votes;
+        $voteArray = array();
+        foreach ($votes as $vote) { //get the vote, its choices and the corresponding selections
+            $tempArray = array();
+            $sum = 0;
+            foreach ($vote->choices as $choice) {
+                $tempCount = $thread->selections()->where('vote_id', $vote->id)->where('choice_id', $choice->id)->count();
+                $sum += $tempCount;
+                array_push($tempArray, [$choice, $tempCount]);
+            }
+            array_push($voteArray, [$vote, $tempArray, $sum]);
+        }
+        //dd($votes, $voteArray);
+
+        /*$selectionArray = array();
+        foreach ($votes as $vote) {     //calculate the corresponding number of votes
+            $tempArray = array();
+            $sum = 0;
+            foreach ($vote->choices as $choice) {
+                $tempCount = $thread->selections()->where('vote_id', $vote->id)->where('choice_id', $choice->id)->count();
+                $sum += $tempCount;
+                array_push($tempArray, $tempCount);
+            }
+            array_push($tempArray, $sum);
+            array_push($selectionArray, $tempArray);
+        }*/
+
+        $timeBeforeNextVote = null;
+        if(Auth::check()) {     //show user's last vote choice
+            $userLastVote = array();
+            foreach ($votes as $vote) {
+                break;
+            }
+            $userLastVoteTime = $thread->selections()->where('user_id', Auth::user()->id)->first()['created_at'];
+            $timeGap = (strtotime(Carbon::now()) - strtotime($userLastVoteTime))/60;
+            if( (int)$timeGap <= $thread->voteGap) {
+                //time gap is bigger than vote gap now
+                $timeBeforeNextVote = $thread->voteGap - (int)$timeGap;
+            }
+        }
+
+        //dd($userLastVoteTime);
+        return view('threads.show', compact('thread', 'comments', 'voteArray', 'timeBeforeNextVote'));
     }
 
     public function create()
