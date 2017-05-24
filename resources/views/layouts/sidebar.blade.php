@@ -82,13 +82,14 @@
         </div>
     </div>
     @else
-        <div class="sidebar-module" style="height: 300px; background-color: forestgreen;">
+        {{--<div class="sidebar-module" style="height: 300px; background-color: forestgreen;">
             <button type="submit" formaction="/threads/create" class="btn btn-primary" style="background-color: greenyellow; font-size: larger; color: black">
                 Create</button>
+        </div>--}}
+        <div class="sidebar-module btn btn-success btn-lg" data-toggle="modal" data-target="#myPassword">
+            Create a vote
         </div>
-        @endif
-
-
+    @endif
 
 
     <div class="sidebar-module sidebar-module-inset">
@@ -132,3 +133,37 @@
         </ol>
     </div>
 </div><!-- /.blog-sidebar -->
+
+
+
+
+{{--modal--}}
+<div class="modal fade" id="myPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel" align="center">choose how many question</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        <form class="form-horizontal"  action="/threads/create" method="POST" >
+                            <div class="form-group">
+                                <label class="control-label inline", for='new_password'>password</label>
+                                <input type="password" class="form-control" name="new_password" id="new_password">
+
+                                <label class="control-label inline", for='confirm_password'>repeat</label>
+                                <input type="password" class="form-control" name="confirm_password" id="confirm_password">
+
+                            </div>
+                            <button type="submit"  class ="btn btn-primary" >Update</button>
+                            <input type="reset">
+                        </form> <!-- end form -->
+                    </div>
+                </div>
+            </div> <!-- modal body -->
+        </div> <!-- modal content -->
+    </div> <!-- modal dialog -->
+</div>

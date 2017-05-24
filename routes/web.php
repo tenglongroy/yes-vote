@@ -19,7 +19,7 @@ Route::get('/', 'ThreadController@index')->name('home');
 Route::get('/index', 'ThreadController@index');
 
 Route::get('/threads/{entryCode}', 'ThreadController@show');
-Route::get('/threads/create', 'ThreadController@create');
+Route::post('/threads/create', 'ThreadController@create');
 Route::post('/threads', 'ThreadController@store');
 
 Route::post('/threads/{thread}/comment', 'CommentsController@store');
