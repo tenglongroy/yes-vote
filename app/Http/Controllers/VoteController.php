@@ -111,7 +111,13 @@ class VoteController extends Controller
 
     public function store()
     {
-        dd(request());
+        //dd(request());
+        $this->validate(request(),[
+            'vote_title' => 'required|min:2',
+            'question1' => 'required'
+        ]);
+
+        dd(request()->all());
     }
 
     public function store1()
