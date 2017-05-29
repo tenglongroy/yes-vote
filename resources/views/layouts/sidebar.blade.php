@@ -82,13 +82,15 @@
         </div>
     </div>
     @else
-        {{--<div class="sidebar-module" style="height: 300px; background-color: forestgreen;">
-            <button type="submit" formaction="/threads/create" class="btn btn-primary" style="background-color: greenyellow; font-size: larger; color: black">
-                Create</button>
-        </div>--}}
-        <div class="sidebar-module btn btn-success btn-lg" data-toggle="modal" data-target="#myPassword">
-            Create a vote
+        {{--<button type="submit" formaction="/votes/create" class="sidebar-module btn btn-success btn-lg" style="font-size: x-large;">
+            Create a vote</button>--}}
+        <div>
+            <a class="sidebar-module btn btn-success btn-lg" style="font-size: x-large;" href="{{ route('vote_create') }}">
+                Create a vote</a>
         </div>
+        {{--<div class="sidebar-module btn btn-success btn-lg" data-toggle="modal" data-target="#myPassword">
+            Create a vote
+        </div>--}}
     @endif
 
 
@@ -149,7 +151,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-4 col-md-offset-4">
-                        <form class="form-horizontal"  action="/threads/create" method="POST" >
+                        <form class="form-horizontal"  action="/votes/create" method="POST" >
                             <div class="form-group">
                                 <label class="control-label inline", for='new_password'>password</label>
                                 <input type="password" class="form-control" name="new_password" id="new_password">

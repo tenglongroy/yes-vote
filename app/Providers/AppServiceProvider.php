@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
         //view composer
         //for every sidebar, add a callback function. when load a sidebar, we load these..
         view()->composer('layouts.sidebar', function ($view) {
-            $view->with('archives', \App\Thread::archives());
+            $view->with('archives', \App\Vote::archives());
             //$view->with('tags', \App\Tag::has('posts')->pluck('name'));
 
             /*$archives = \App\Post::archives();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Vote;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -12,14 +13,15 @@ class CommentController extends Controller
         $this->middleware('auth');
     }
 
-    public function store(Thread $thread)
+    public function store($entryCode)
     {
         $this->validate(request(), ['body'=>'required|min:2']);
 //        Comment::create([
 //           'body' => request('body'),
 //            'post_id' => $post->id
 //        ]);
-        $thread->addComment(request('body'));
+        $vote = Vote::where('entryCode', $entryCode)->first();
+        $vote->addComment(request('body'));
         return back();
     }
 }

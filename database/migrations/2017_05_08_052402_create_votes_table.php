@@ -15,10 +15,16 @@ class CreateVotesTable extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('thread_id');
-            $table->text('question');
-            $table->boolean('isMultiple')->default(false);
-            $table->integer('maxChoice')->default(1);
+            $table->integer('user_id');
+            $table->string('title');
+            $table->text('description');
+            $table->boolean('isComment')->default(true);
+            $table->boolean('isAnonymous')->default(false);
+            $table->boolean('isPublic')->default(true);
+            $table->timestamp('startTime')->nullable();
+            $table->timestamp('endTime')->nullable();
+            $table->integer('voteGap')->default(43200); //1 month
+            $table->string('entryCode')->unique();
             $table->timestamps();
         });
     }

@@ -15,14 +15,15 @@
     return view('welcome');
 });*/
 
-Route::get('/', 'ThreadController@index')->name('home');
-Route::get('/index', 'ThreadController@index');
+Route::get('/', 'VoteController@index')->name('home');
+Route::get('/index', 'VoteController@index');
 
-Route::get('/threads/{entryCode}', 'ThreadController@show');
-Route::post('/threads/create', 'ThreadController@create');
-Route::post('/threads', 'ThreadController@store');
+Route::post('/votes/select', 'VoteController@select');
+Route::post('/votes/store', 'VoteController@store');
+Route::get('/votes/create', 'VoteController@create')->name('vote_create');
+Route::get('/votes/{entryCode}', 'VoteController@show');
 
-Route::post('/threads/{thread}/comment', 'CommentsController@store');
+Route::post('/votes/{entryCode}/comment', 'CommentController@store');
 
 
 

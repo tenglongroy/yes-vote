@@ -27,9 +27,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function threads()
+    public function votes()
     {
-        return $this->hasMany(Thread::class);
+        return $this->hasMany(Vote::class);
     }
 
     public function comments()
@@ -42,8 +42,8 @@ class User extends Authenticatable
         return $this->hasMany(Selection::class);
     }
 
-    public function publish(Thread $thread)
+    public function publish(Vote $vote)
     {
-        $this->threads()->save($thread);
+        $this->votes()->save($vote);
     }
 }
