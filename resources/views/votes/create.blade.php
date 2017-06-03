@@ -81,14 +81,14 @@
         };
 
         question_index = 0;     //the value corresponds to each question's index
-        var newDiv = '<div class="container" id="{@index}"><h5>{@index}</h5>';
+        var newDiv = '<div class="container" id="{@index}"><hr><h5>{@index}</h5>';
         newDiv += '<div class="row"><input type="text" name="{@index}" placeholder="question" required/></div>';
         newDiv += '<div class="row"><input type="checkbox" id="{@index}_multiple" name="{@index}_multiple" value="1" /><h5>multiple</h5></div>';
         newDiv += '<div class="row" id="{@index}_max" style="display:none" ><h6>max choice</h6><input type="number" name="{@index}_max"/></div>';
         newDiv += '<div class="row"><input type="button" id="{@index}_add" value="Add"/>';
         newDiv += '<input type="button" id="{@index}_minus" value="Minus"/></div>';
         newDiv += '<div class="row input" id="{@index}_choice1"><input type="text" name="{@index}_choice1" placeholder="{@index}_choice1" required/></div>';
-        newDiv += '<div class="row input" id="{@index}_choice2"><input type="text" name="{@index}_choice2" placeholder="{@index}_choice2" required/></div><hr></div>';
+        newDiv += '<div class="row input" id="{@index}_choice2"><input type="text" name="{@index}_choice2" placeholder="{@index}_choice2" required/></div></div>';
 
 
         $(function() {

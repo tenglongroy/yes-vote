@@ -25,8 +25,11 @@ Route::get('/votes/{entryCode}', 'VoteController@show');
 
 Route::post('/votes/{entryCode}/comment', 'CommentController@store');
 
+Route::get('/users/{user}', 'HomeController@user');
+Route::post('/users/change', 'HomeController@change');
 
+Route::get('/wasteland', 'HomeController@wasteland')->name('wasterland');
 
 Auth::routes();
-Route::get('/home', 'HomeController@index');
+//Route::get('/home', 'HomeController@index');
 

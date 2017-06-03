@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Choice;
 use App\Comment;
+use App\Question;
 use App\Selection;
 use App\Vote;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function MongoDB\BSON\toJSON;
 
 class VoteController extends Controller
 {
@@ -42,6 +45,8 @@ class VoteController extends Controller
         $vote = Vote::where('entryCode', $entryCode)->first();
         $comments = $vote->comments()->latest()->get();
         $questions = $vote->questions;
+        //$votedUsers = Selection::where('vote_id', $vote->id)->latest()->select('user_id')->groupBy('user_id')->get();
+        $votedUsers = $vote->selections()->latest()->select('user_id')->groupBy('user_id')->get();
         $questionArray = array();
         foreach ($questions as $question) { //get the question, its choices and the corresponding selections
             $tempArray = array();
@@ -83,7 +88,7 @@ class VoteController extends Controller
         }
 
         //dd($userLastVoteTime);
-        return view('votes.show', compact('vote', 'comments', 'questionArray', 'timeBeforeNextVote'));
+        return view('votes.show', compact('vote', 'comments', 'questionArray', 'timeBeforeNextVote', 'votedUsers'));
     }
 
     public function select()
@@ -109,15 +114,105 @@ class VoteController extends Controller
         return view('votes.create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
         //dd(request());
-        $this->validate(request(),[
+        $this->validate($request,[
             'vote_title' => 'required|min:2',
-            'question1' => 'required'
+            'question1' => 'required|min:2'
         ]);
 
-        dd(request()->all());
+        //dd(request()->all());
+
+        $vote_title = $request->input('vote_title');
+        //$description = request().hasKey('vote_description')? request('vote_description'):' ';
+        $description = $request->input('vote_description', ' ');
+        //$vote_comment = request().hasKey('vote_comment')? request('vote_comment'):true;
+        $vote_comment = $request->input('vote_comment', true);
+        //$vote_anonymous = request().hasKey('vote_anonymous')? request('vote_anonymous'):false;
+        $vote_anonymous = $request->input('vote_anonymous', false);
+        //$vote_public = request().hasKey('vote_public')? request('vote_public'):true;
+        $vote_public = $request->input('vote_public', true);
+        $vote_starttime = $request->exists('vote_starttime')? Carbon::parse($request->input('vote_starttime')):Carbon::now();
+        $vote_endtime = $request->exists('vote_endtime')? Carbon::parse($request->input('vote_endtime')):Carbon::now();
+        $vote_gap = $request->input('vote_gap');
+        if($vote_gap.equalToIgnoringCase('infinite'))
+            $vote_gap = 1000000;
+        $entryCode = bcrypt(auth()->user()->id);
+        $entryCode = str_replace('/', 'R', $entryCode);
+        $newVote = Vote::create([
+            'user_id' => auth()->user()->id,
+            'title' => $vote_title,
+            'description' => $description,
+            'isComment' => $vote_comment,
+            'isAnonymous' => $vote_anonymous,
+            'isPublic' => $vote_public,
+            'startTime' => $vote_starttime,
+            'endTime' => $vote_endtime,
+            'voteGap' => $vote_gap,
+            'entryCode' => $entryCode
+        ]);
+
+        error_log(gettype($request->except('_token'))); //array
+
+        //question-vote dict [question-name(created): [choice-body, choice-body..], ...]
+        /*foreach ( $request->except([
+            '_token', 'vote_title', 'vote_description', 'vote_comment', 'vote_anonymous', 'vote_public', 'vote_starttime', 'vote_endtime', 'vote_gap', 'infinite'
+        ]) as $key => $value) {
+            //error_log($key);error_log($value);
+            if(strpos($key,'question')==0 && strpos($key, '_')==false){
+
+            }
+        }*/
+
+        $question_array1 = $request->except([
+            '_token', 'vote_title', 'vote_description', 'vote_comment', 'vote_anonymous', 'vote_public', 'vote_starttime', 'vote_endtime', 'vote_gap', 'infinite'
+        ]);
+        $flagQuestion = '';
+        $flagMultiple = false;
+        $currentQuestion = null;
+        foreach($question_array1 as $key => $value){
+            if(strpos($key,'question')==0
+                && strpos($key, '_')==false){   //'question1'
+                $flagQuestion = $value;
+                $currentQuestion = null;
+            }
+            //'question1_multiple' exists
+            elseif ($flagQuestion !== '' && strpos($key, '_multiple') !== false){
+                $flagMultiple = true;
+            }
+            //'question1_max'
+            elseif (strpos($key, '_max') !== false){
+                $currentQuestion = Question::create([
+                    'vote_id' => $newVote->id,
+                    'description' => $flagQuestion,
+                    'isMultiple' => $flagMultiple? 1:0,
+                    'maxChoice' => $value==null? 1:$value
+                ]);
+                //re-init
+                $flagQuestion = '';
+                $flagMultiple = false;
+            }
+            //'question1_choice1'
+            elseif (strpos($key, '_choice') !== false){
+                Choice::create([
+                    'question_id' => $currentQuestion->id,
+                    'body' => $value
+                ]);
+            }
+        }
+
+        return redirect('/votes/'.$entryCode);
+
+
+        /*$question_array = array($request->all());
+        for($index = 0; $index < count($question_array); $index++){
+            error_log($question_array[$index][0]);error_log($question_array[$index]->value);
+            if(strpos($question_array[$index][0],'question')==0
+                && strpos($question_array[$index][0], '_')==false){
+
+            }
+        }*/
     }
 
     public function store1()
