@@ -119,7 +119,11 @@ class VoteController extends Controller
         //dd(request());
         $this->validate($request,[
             'vote_title' => 'required|min:2',
-            'question1' => 'required|min:2'
+            'vote_starttime' => 'required',
+            'vote_endtime' => 'required',
+            'question1' => 'required|min:2',
+            'question1_choice1' => 'required|min:2',
+            'question1_choice2' => 'required|min:2'
         ]);
 
         //dd(request()->all());

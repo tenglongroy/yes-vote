@@ -25,8 +25,10 @@ Route::get('/votes/{entryCode}', 'VoteController@show');
 
 Route::post('/votes/{entryCode}/comment', 'CommentController@store');
 
-Route::get('/users/{user}', 'HomeController@user');
-Route::post('/users/change', 'HomeController@change');
+//Route::get('/users/{user}', 'HomeController@user');
+Route::post('/users/changePassword', 'HomeController@changePassword');
+Route::post('/users/changeName', 'HomeController@changeName');
+Route::match(array('GET', 'POST'),'/users/{user}', 'HomeController@user');
 
 Route::get('/wasteland', 'HomeController@wasteland')->name('wasterland');
 

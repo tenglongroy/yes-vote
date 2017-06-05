@@ -22,18 +22,18 @@
                                 <div class="col-sm-6"><a href="{{ route('register') }}">Register</a></div>
                             </div>
                         @else
-                            <li class="dropdown">
+                            {{--<li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->name }}
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="/users/{{ Auth::user()->name }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        <a onclick="event.preventDefault();
+                                                     document.getElementById('user-profile').submit();">
                                             Profile
                                         </a>
-                                        <form id="user-profile" action="/users/{{ Auth::user()->name }}" method="GET" style="display: none;">
+                                        <form id="user-profile" action="/users/{{ Auth::user()->id }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
@@ -49,7 +49,29 @@
                                         </form>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>--}}
+                        <div class="w3-container">
+                            <div class="w3-dropdown-hover">
+                                <div class="w3-button w3-blue">{{ Auth::user()->name }}<span class="caret"></span></div>
+                                <div class="w3-dropdown-content w3-bar-block w3-border">
+                                    <a onclick="event.preventDefault();
+                                    document.getElementById('user-profile').submit();"
+                                       class="w3-bar-item w3-button">
+                                        Profile</a>
+                                    <form id="user-profile" action="/users/{{ Auth::user()->id }}" method="GET" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                    <a href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                       document.getElementById('logout-form').submit();"
+                                       class="w3-bar-item w3-button">
+                                        Logout</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         @endif
                     </ul>
                 </div>

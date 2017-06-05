@@ -4,24 +4,30 @@
 @section('content')
 <div class="col-sm-8 blog-main container">
 
+    @include('layouts.errors')
 
-    <div class="row" id="user_email" style="display: inline;">
-        <mark>Email:   </mark>
-        <a class="h4">{{ $user->email }}</a>
-    </div>
-    <div class="field-container emailAddress">
-        <label for="emailAddress">
-            Email Address
-        </label>
-        <input name="email1" type="text" id="emailAddress" value="roy1990226@gmail.com" />
+    <div class="row field-container emailAddress" id="user_email" style="display: inline;">
+        <a>Email:   </a>
+        <a class="h4" ><label for="emailAddress">{{ $user->email }}</label></a>
     </div>
 
     <div class="row" id="user_name" style="display: inline;">
-        <mark>Name:   </mark>
-        <a class="h3">{{ auth()->user()->name }}</a></div>
+        <div class="col-sm-7" style="float: left">
+            <a>Name:   </a>
+            <a id="name_show" contentEditable="true" class="h3">{{ auth()->user()->name }}</a>
+            <input id="name_edit" style="display: none; font-size:20px" type="text">
+        </div>
+        <div class="col-sm-offset-1 col-sm-3">
+            <form id="name_change_form" action="/users/changeName" method="POST">
+                {{ csrf_field() }}
+                <input type="hidden" id="name_update_ipt" name="name_update_ipt" value=" ">
+                <button id="name_update_btn" style="display: none;">Update Name</button>
+            </form>
+        </div>
+    </div>
 
     <div class="formButtons field-container changePassword">
-        <form action="/users/change" method="POST" >
+        <form action="/users/changePassword" method="POST" >
             {{ csrf_field() }}
             <div class="row form-group" style="display: inline">
                 <div class="col-xs-3">
@@ -37,63 +43,92 @@
                     <input id="new_password" type="password" name="password" placeholder="New Password" style="display: none">
                 </div>
                 <div class="col-xs-offset-1 col-xs-3">
-                    <input id="confirm_password" type="password" name="confirm_password" placeholder="Confirm Password" style="display: none">
+                    <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Confirm Password" style="display: none">
                 </div>
                 <div class="col-xs-offset-1 col-xs-3">
-                    <input id="submit_password" class="btn btn-danger active" type="submit" value="Change Password" style="display: none">
+                    <input id="submit_password" class="btn btn-danger active" type="submit" value="Update" style="display: none">
                 </div>
             </div>
         </form>
     </div>
     <script>
+        function name_click(){
+            $('#name_show').hide();
+            $('#name_edit').show();
+            $('#name_edit').focus();
+            $('#name_edit').val($('#name_show').html());
+            $('#name_update_btn').show();
+        }
+        function name_blur(){
+            $('#name_show').show();
+            $('#name_edit').hide();
+            $('#name_update_btn').hide();
+        }
+        //https://stackoverflow.com/questions/10652852/jquery-fire-click-before-blur-event
+        $("#name_update_btn").on('mousedown', function () {
+            if(confirm('Update name?')){
+                $('#name_update_ipt').val($('#name_edit').val());
+                document.getElementById('name_change_form').submit();
+            }
+        });
+        $("#name_show").click(name_click);
+        $("#name_edit").blur(name_blur);
+
+        /*https://stackoverflow.com/questions/2441565/how-do-i-make-a-div-element-editable-like-a-textarea-when-i-click-it
+        function divClicked() {
+            var divHtml = $(this).html();
+            var editableText = $("<textarea />");
+            editableText.val(divHtml);
+            $(this).replaceWith(editableText);
+            editableText.focus();
+            // setup the blur event for this new textarea
+            editableText.blur(editableTextBlurred);
+
+            window.old_name_content = $(this).html();
+            $(this).html(window.new_name_content);
+            $('#name_update_btn').show();
+        };
+        function editableTextBlurred() {
+            var html = $(this).val();
+            var viewableText = $("<div>");
+            viewableText.html(html);
+            $(this).replaceWith(viewableText);
+            // setup the click event for this new div
+            $(viewableText).click(divClicked);
+
+            window.new_name_content = $(this).html();
+            $(this).html(window.old_name_content);
+            $('#name_update_btn').hide();
+        };
+        $("#name_editable").click(divClicked);
+        $("#name_editable").blur(editableTextBlurred);*/
+
         $('#change_password').click(function () {
             $('#old_password').show();
             $('#new_password').show();
-            $('#confirm_password').show();
+            $('#password_confirmation').show();
             $('#submit_password').show();
         })
 
-        var old_password = document.getElementById("old_password");
-        var new_password = document.getElementById("new_password");
-        var confirm_password = document.getElementById("confirm_password");
-
-        $('#submit_password').click(function (event) {
+        $('#submit_password').click(function () {
             if($('#old_password').val().length == 0){
+                alert('Old password cannot be empty.');
                 $('#old_password').get(0).setCustomValidity("Old password cannot be empty.");
-                old_password.setCustomValidity("Old password cannot be empty.");
             }
             else if($('#new_password').val().length < 8){
+                alert('New password must be at least 8 characters.');
                 $('#new_password').get(0).setCustomValidity("New password must be at least 8 characters.");
             }
-            else if($('#confirm_password').val() != $('#new_password').val()){
-                $('#confirm_password').get(0).setCustomValidity("New password doesn't match.");
+            else if($('#password_confirmation').val() != $('#new_password').val()){
+                alert("New passwords doesn't match.");
+                $('#password_confirmation').get(0).setCustomValidity("New password doesn't match.");
             }
             else{
+                //alert('return true');
                 return true;
             }
-            event.preventDefault();
+            return false;
         })
-
-        /*var old_password = document.getElementById("old_password");
-        var new_password = document.getElementById("new_password");
-        var confirm_password = document.getElementById("confirm_password");
-
-        function validatePassword(){
-            if(old_password.value.length == 0){
-                old_password.setCustomValidity("Old password cannot be empty.");
-            }
-            else if(new_password.value != confirm_password.value) {
-                //show the hint when fail validity
-                confirm_password.setCustomValidity("New password doesn't match.");
-            }
-            else if(new_password.value.length == 0) {
-                new_password.setCustomValidity("Passwords cannot be empty.")
-            }
-            else {
-                confirm_password.setCustomValidity('');
-            }
-        }
-        document.getElementById("submit_password").onclick = validatePassword;*/
     </script>
     {{--<div class="row sidebar-module btn btn-warning btn-lg" id="user_password" data-toggle="modal" data-target="#changePassword">
         Change Password
@@ -137,40 +172,6 @@
     @endif
 
 </div>
-
-
-{{--modal--}}
-<div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel" align="center">choose how many question</h4>
-            </div>
-
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        <form class="form-horizontal"  action="/votes/create" method="POST" >
-                            <div class="form-group">
-                                <label class="control-label inline", for='new_password'>password</label>
-                                <input type="password" class="form-control" name="new_password" id="new_password">
-
-                                <label class="control-label inline", for='confirm_password'>repeat</label>
-                                <input type="password" class="form-control" name="confirm_password" id="confirm_password">
-
-                            </div>
-                            <button type="submit"  class ="btn btn-primary" >Update</button>
-                            <input type="reset">
-                        </form> <!-- end form -->
-                    </div>
-                </div>
-            </div> <!-- modal body -->
-        </div> <!-- modal content -->
-    </div> <!-- modal dialog -->
-</div>
-
-
 
 
 
