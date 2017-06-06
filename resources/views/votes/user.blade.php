@@ -140,6 +140,7 @@
         <h3>User created.</h3>
         <ul class="list-group w-100">
             @foreach($votes as $vote)
+                <a href={{ "/votes/".$vote->entryCode }} >
                 <li class="list-group-item list-group-item-action list-group-item-info">
                     <div class="d-flex justify-content-between">
                     <h4 class="mb-1">{{ $vote->title }}</h4>
@@ -147,7 +148,7 @@
                     <small>{{ $vote->created_at->toDateString() /*format('Y-m-d')*/ }}</small>
                     {{--<p class="mb-1">{{ $vote->description }}</p>--}}
                     </div>
-                </li>
+                </li></a>
             @endforeach
         </ul>
     </div>
@@ -158,11 +159,12 @@
         <h3>User voted.</h3>
         <ul class="list-group w-100">
             @foreach($selections as $selection)
+                <a href={{ "/votes/".$selection->entryCode }} >
                 <li class="list-group-item list-group-item-action list-group-item-warning">
                     <div class="d-flex justify-content-between">
-                        <h4 class="mb-1">{{ $vote->title }}</h4>
+                        <h4 class="mb-1">{{ $selection->title }}</h4>
                         {{--<em>{{ $vote->description }}</em>--}}
-                        <small>{{ $vote->created_at->toDateString() /*format('Y-m-d')*/ }}</small>
+                        <small>{{ Carbon\Carbon::parse($selection->select_time)->toDateString() /*format('Y-m-d')*/ }}</small>
                         {{--<p class="mb-1">{{ $vote->description }}</p>--}}
                     </div>
                 </li>

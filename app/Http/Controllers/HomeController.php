@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
@@ -34,13 +36,25 @@ class HomeController extends Controller
             return redirect('wasteland');
         //$currentUser = auth()->user();
         $votes = $user->votes()->latest()->get();
-        $selections = $user->selections()->latest()->select('vote_id')->groupBy('vote_id')->get();
+        /*$selections = $user->selections()->latest()->select('vote_id')->groupBy('vote_id')->get();
+        $selection_votes = array();
+        foreach ($selections as $selection){
+            array_push($selection_votes, Vote::where('id', $selection->vote_id)->first());
+        }*/
+        $selections = DB::table('votes')->join('selections', 'selections.vote_id', '=', 'votes.id')
+            ->where('selections.user_id', $user->id)->groupBy('vote_id')
+            ->selectRaw('votes.*, selections.created_at as select_time')->orderBy('select_time', 'desc')->get();
+        //dd($selections);
         return view('votes.user', compact('user', 'votes', 'selections'));
     }
 
     public function changeName(Request $request)
     {
-        dd($request);
+        $newName = $request->input('name_update_ipt');
+        $user = auth()->user();
+        $user->name = $newName;
+        $user->save();
+        return back();
     }
 
     public function changePassword(Request $request)

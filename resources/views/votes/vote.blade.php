@@ -8,7 +8,7 @@
         </h6>
         <a href="/votes/{{ $vote->entryCode }}" class="btn btn-primary">Go to Vote</a>
     </div>
-</div>
+</div><br>
 
 
 

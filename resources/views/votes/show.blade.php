@@ -10,7 +10,7 @@
         <h3>{{ $vote->description }}</h3>
         </div>
         <div class="col-sm-3">
-            <button class="sidebar-module btn btn-success btn-lg" data-toggle="modal" data-target="#votedUserList">
+            <button class="sidebar-module btn btn-warning btn-lg" data-toggle="modal" data-target="#votedUserList">
                 see who voted</button>
         </div>
     </div>
@@ -78,7 +78,7 @@
             @endforeach
 
             <div class="row" id="form_submit_button">
-                <button type="submit" class="btn btn-primary" onclick="submitForms()" id="asdfbutton">
+                <button type="submit" class="btn btn-primary" {{--onclick="submitForms()"--}} id="asdfbutton">
                     Submit your vote!
                 </button>
                 {{--<input type="button" value="Submit your vote!" onclick="submitForms()" />--}}
