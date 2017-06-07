@@ -111,6 +111,12 @@ class VoteController extends Controller
 
     public function create()
     {
+        if (empty(auth()->user()->activated_at)){   //not yet activated
+            flash()->overlay('- To create a vote, please activate your account first.<br>
+            - To resend activation, please find it in your account profile', 'Unauthorised!');
+            //return redirect('wasteland');
+            return back();
+        }
         return view('votes.create');
     }
 
@@ -142,8 +148,9 @@ class VoteController extends Controller
         $vote_gap = $request->input('vote_gap');
         if($vote_gap.equalToIgnoringCase('infinite'))
             $vote_gap = 1000000;
-        $entryCode = bcrypt(auth()->user()->id);
-        $entryCode = str_replace('/', 'R', $entryCode);
+        /*$entryCode = bcrypt(auth()->user()->id);
+        $entryCode = str_replace('/', 'R', $entryCode);*/
+        $entryCode = str_random(64);
         $newVote = Vote::create([
             'user_id' => auth()->user()->id,
             'title' => $vote_title,
@@ -207,19 +214,10 @@ class VoteController extends Controller
         }
 
         return redirect('/votes/'.$entryCode);
-
-
-        /*$question_array = array($request->all());
-        for($index = 0; $index < count($question_array); $index++){
-            error_log($question_array[$index][0]);error_log($question_array[$index]->value);
-            if(strpos($question_array[$index][0],'question')==0
-                && strpos($question_array[$index][0], '_')==false){
-
-            }
-        }*/
     }
 
-    public function store1()
+    //store1, store2
+    /*public function store1()
     {
         $post = new \App\Post;  //use App\Post;
         $post->title = request('title');
@@ -239,22 +237,7 @@ class VoteController extends Controller
             new Post(request(['title', 'body']))
         );
 
-//        Post::create([
-//           'title' => request('title'),
-//            'body' => request('body'),
-//            'user_id' => auth()->user()->id //auth()->id()
-//        ]);
-
-
-        //\App\Post::create(request(['title', 'body']));
-
-        //\App\Post::create(request()->all());    //collaborate with fillable in Post.php
-
-
-        //session()->flash('message', 'Your post has been published');
-        //flash('Your post has been published.')->warning()->important();
         flash()->overlay("Your post has been published.", 'Welcome!');
-
         return redirect('/postsindex');
-    }
+    }*/
 }

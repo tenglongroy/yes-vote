@@ -17,7 +17,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('wasteland');
     }
 
     /**
@@ -54,6 +54,7 @@ class HomeController extends Controller
         $user = auth()->user();
         $user->name = $newName;
         $user->save();
+        flash()->overlay("Your name has been updated.", 'Success!');
         return back();
     }
 

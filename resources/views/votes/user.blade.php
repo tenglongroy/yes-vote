@@ -6,6 +6,17 @@
 
     @include('layouts.errors')
 
+    @if( empty($user->activated_at) )
+        <div class="row">
+            <a>Click button to resend activation.</a>
+            @if($user->send_time == null || Carbon\Carbon::now()->diffInMinutes(Carbon\Carbon::parse($user->send_time)) >= 60)
+                <a class="btn btn-warning active" href="/account/reactivate">Resend</a>
+            @else
+                <a class="btn btn-warning disabled">{{ 60- Carbon\Carbon::now()->diffInMinutes(Carbon\Carbon::parse($user->send_time)) }}min to resend</a>
+            @endif
+        </div>
+    @endif
+
     <div class="row field-container emailAddress" id="user_email" style="display: inline;">
         <a>Email:   </a>
         <a class="h4" ><label for="emailAddress">{{ $user->email }}</label></a>
@@ -83,10 +94,6 @@
             editableText.focus();
             // setup the blur event for this new textarea
             editableText.blur(editableTextBlurred);
-
-            window.old_name_content = $(this).html();
-            $(this).html(window.new_name_content);
-            $('#name_update_btn').show();
         };
         function editableTextBlurred() {
             var html = $(this).val();
@@ -95,10 +102,6 @@
             $(this).replaceWith(viewableText);
             // setup the click event for this new div
             $(viewableText).click(divClicked);
-
-            window.new_name_content = $(this).html();
-            $(this).html(window.old_name_content);
-            $('#name_update_btn').hide();
         };
         $("#name_editable").click(divClicked);
         $("#name_editable").blur(editableTextBlurred);*/
@@ -159,7 +162,7 @@
         <h3>User voted.</h3>
         <ul class="list-group w-100">
             @foreach($selections as $selection)
-                <a href={{ "/votes/".$selection->entryCode }} >
+                <a href={{ "/votes/".$selection->entryCode }} />
                 <li class="list-group-item list-group-item-action list-group-item-warning">
                     <div class="d-flex justify-content-between">
                         <h4 class="mb-1">{{ $selection->title }}</h4>

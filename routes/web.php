@@ -32,6 +32,9 @@ Route::match(array('GET', 'POST'),'/users/{user}', 'HomeController@user');
 
 Route::get('/wasteland', 'HomeController@wasteland')->name('wasterland');
 
+Route::get('account/activate/{token}', 'Auth\ActivationController@activate')->name('account.activate');
+Route::get('/account/reactivate', 'Auth\ActivationController@reactivate')->name('account.reactivate');
+
 Auth::routes();
 //Route::get('/home', 'HomeController@index');
 
