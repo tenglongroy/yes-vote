@@ -17,7 +17,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('wasteland');
+        $this->middleware('auth')->except(['wasteland', 'search']);
     }
 
     /**
@@ -84,5 +84,11 @@ class HomeController extends Controller
     public function wasteland()
     {
         return view('wasteland');
+    }
+
+    public function search(){
+        error_log('in search');
+        //dd(request());
+        return response()->json(Vote::first());
     }
 }

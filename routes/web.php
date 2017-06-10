@@ -35,6 +35,8 @@ Route::get('/wasteland', 'HomeController@wasteland')->name('wasterland');
 Route::get('account/activate/{token}', 'Auth\ActivationController@activate')->name('account.activate');
 Route::get('/account/reactivate', 'Auth\ActivationController@reactivate')->name('account.reactivate');
 
+Route::get('/ajax/search', 'HomeController@search');
+
 Auth::routes();
 //Route::get('/home', 'HomeController@index');
 

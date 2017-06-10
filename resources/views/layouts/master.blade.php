@@ -16,6 +16,13 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<link rel="stylesheet" type="text/css" href={{ asset('/css/autocomplete.css') }}>
+	{{--<script type="text/javascript" src={{ asset('/js/autocomplete.js') }}></script>--}}
+
 	<!-- Custom styles for this template -->
 	<link href="/css/app.css" rel="stylesheet">
 </head>
@@ -36,11 +43,9 @@
 		{{--<p>This is my horse!</p>--}}
 	</div>
 
-	<script src="//code.jquery.com/jquery.js"></script>
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script>
+	{{--<script>
         $('#flash-overlay-modal').modal();
-	</script>
+	</script>--}}
 
 
 	<div class="blog-header">
